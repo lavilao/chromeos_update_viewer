@@ -26,14 +26,17 @@ const ext = {
   css: ".css",
 };
 
+const entrypoints = resolveEntryPoints([
+  ...scripts,
+  service_worker,
+  "options/index.tsx",
+  "popup/index.tsx",
+]);
+
 await Bun.build({
   target: "browser",
-  entrypoints: resolveEntryPoints([
-    ...scripts,
-    service_worker,
-    "options/index.tsx",
-    "popup/index.tsx",
-  ]),
+  root: "./src",
+  entrypoints,
   outdir,
 });
 
@@ -55,8 +58,8 @@ for await (const filename of glob.scan(publicFolder)) {
 
     // rename files to index.html since it's being copied into a folder that share its original name
     await $`cp ${file.name} ${outdir}/${fileFolder}/index.html`;
-    // copy the css file into the folder
-    await $`bun run css -- ${mainCssFile.name} -o ${outdir}/${fileFolder}/main.css`.quiet();
+    // copy css file into folder (skip postcss processing for now)
+    await $`cp ${mainCssFile.name} ${outdir}/${fileFolder}/main.css`;
   } else {
     await $`cp ${file.name} ${outdir}`;
   }

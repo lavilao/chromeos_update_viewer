@@ -1,5 +1,8 @@
 # Based on https://raw.githubusercontent.com/github/gitignore/main/Node.gitignore
 
+# ChromeOS Update Logs
+update_engine.log
+
 # Logs
 
 logs
